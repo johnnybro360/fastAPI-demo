@@ -54,6 +54,7 @@ async def users_list():
 async def users_read(user_id: int):
     return {"user_id": f"{user_id}"}
 
+
 # @app.
 # get
 # post
