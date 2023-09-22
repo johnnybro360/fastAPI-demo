@@ -1,3 +1,10 @@
+# https://realpython.com/fastapi-python-web-apis/
+# https://fastapi.tiangolo.com/tutorial/
+# https://realpython.com/async-io-python/
+# https://realpython.com/python-async-features/
+# https://realpython.com/python-type-checking/
+
+
 from typing import Optional
 from fastapi import FastAPI
 from pydantic import BaseModel
@@ -6,7 +13,7 @@ from pydantic import BaseModel
 class Item(BaseModel):
     name: str
     description: Optional[str] = None
-    price: int
+    price: float
     tax: Optional[float] = None
 
 
@@ -25,7 +32,12 @@ async def items_show():
 
 @app.post('/items/')
 async def item_add(item: Item):
-    return item
+    item_dict = item.model_dump()
+    if item.tax:
+        tax_amount = item.price * item.tax / 100
+        price_with_tax = item.price + tax_amount
+        item_dict.update({"price_with_tax": price_with_tax, "tax_amount": tax_amount })
+    return item_dict
 
 
 @app.get('/items/{item_id}')
